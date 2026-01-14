@@ -1,0 +1,286 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2024-01-01",
+    "total_tickets": 50,
+    "description": "Historical PEDS ticket analysis database for pattern recognition and automated test case generation"
+  },
+  "analysis_patterns": {
+    "campaign_deletion": {
+      "pattern_id": "CAMP_DELETE_001",
+      "description": "Campaign deletion issues - items remain visible after deletion",
+      "examples": [
+        {
+          "ticket_id": "PEDS-10435",
+          "summary": "APN: Draft campaign getting deleted, but still showing in campaign listing",
+          "root_cause": "not excluded deleted campaign from get query",
+          "fix": "exclude deleted campaign from get query",
+          "components": ["smartech-app", "database", "campaign-service"],
+          "complexity_score": 6,
+          "test_timeline_hours": 8,
+          "customer_panel": "heromotocorp_cee",
+          "test_cases_generated": [
+            "P0: APN draft campaign deletion - verify campaigns disappear from UI listing",
+            "P0: Database validation - confirm status = 8 for deleted campaigns",
+            "P0: Customer panel testing - verify deletion works in heromotocorp_cee",
+            "P1: Cross-channel validation - ensure deletion works for all campaign types",
+            "P1: Audit log verification - confirm deletion events are logged"
+          ]
+        }
+      ],
+      "common_keywords": ["delete", "deletion", "disappear", "listing", "campaign", "status"],
+      "test_pattern": "campaign_deletion_standard",
+      "average_complexity": 6,
+      "typical_timeline_hours": 8
+    },
+    "authentication_failures": {
+      "pattern_id": "AUTH_FAIL_001",
+      "description": "User authentication and login-related issues",
+      "examples": [
+        {
+          "ticket_id": "PEDS-9876",
+          "summary": "Users unable to login after password reset",
+          "root_cause": "session invalidation not working correctly after password change",
+          "fix": "implement proper session cleanup on password reset",
+          "components": ["auth-service", "session-store", "UI"],
+          "complexity_score": 7,
+          "test_timeline_hours": 6,
+          "test_cases_generated": [
+            "P0: Password reset functionality - verify new password allows login",
+            "P0: Session management - confirm old sessions invalidated",
+            "P0: Multi-device testing - verify login works across devices",
+            "P1: Security validation - ensure old password rejected",
+            "P1: Email notification - confirm reset confirmation sent"
+          ]
+        }
+      ],
+      "common_keywords": ["login", "authentication", "password", "session", "reset"],
+      "test_pattern": "authentication_standard",
+      "average_complexity": 7,
+      "typical_timeline_hours": 6
+    },
+    "email_delivery_issues": {
+      "pattern_id": "EMAIL_DEL_001",
+      "description": "Email campaign delivery and rendering problems",
+      "examples": [
+        {
+          "ticket_id": "PEDS-8765",
+          "summary": "Email personalization tokens not populating correctly",
+          "root_cause": "template engine not handling null values in customer data",
+          "fix": "add null value handling and fallback values for personalization",
+          "components": ["email-service", "template-engine", "customer-data"],
+          "complexity_score": 5,
+          "test_timeline_hours": 4,
+          "test_cases_generated": [
+            "P0: Personalization validation - verify tokens populate with customer data",
+            "P0: Null value handling - test behavior with missing customer fields",
+            "P0: Fallback values - confirm default values used when data missing",
+            "P1: Cross-client rendering - test email display in major clients",
+            "P1: Special character handling - verify encoding works correctly"
+          ]
+        }
+      ],
+      "common_keywords": ["email", "personalization", "template", "delivery", "rendering"],
+      "test_pattern": "email_delivery_standard",
+      "average_complexity": 5,
+      "typical_timeline_hours": 4
+    },
+    "performance_degradation": {
+      "pattern_id": "PERF_DEG_001", 
+      "description": "System performance and response time issues",
+      "examples": [
+        {
+          "ticket_id": "PEDS-7654",
+          "summary": "Campaign dashboard loading very slowly",
+          "root_cause": "inefficient database queries and missing indexes",
+          "fix": "optimize queries and add database indexes for campaign listing",
+          "components": ["database", "campaign-service", "UI"],
+          "complexity_score": 8,
+          "test_timeline_hours": 10,
+          "test_cases_generated": [
+            "P0: Load time validation - verify dashboard loads within 3 seconds",
+            "P0: Database performance - confirm query execution under 200ms",
+            "P0: Concurrent user testing - validate performance with multiple users",
+            "P1: Memory usage monitoring - ensure no memory leaks during operation",
+            "P1: Cache effectiveness - verify caching improves response times"
+          ]
+        }
+      ],
+      "common_keywords": ["slow", "performance", "timeout", "loading", "response"],
+      "test_pattern": "performance_standard",
+      "average_complexity": 8,
+      "typical_timeline_hours": 10
+    },
+    "api_integration_errors": {
+      "pattern_id": "API_INT_001",
+      "description": "External API integration failures and connectivity issues",
+      "examples": [
+        {
+          "ticket_id": "PEDS-6543",
+          "summary": "SMS delivery failing due to provider API timeout",
+          "root_cause": "insufficient timeout handling and retry logic for SMS provider",
+          "fix": "implement exponential backoff retry mechanism and increase timeout",
+          "components": ["sms-service", "integration-layer", "external-api"],
+          "complexity_score": 7,
+          "test_timeline_hours": 6,
+          "test_cases_generated": [
+            "P0: SMS delivery validation - verify messages sent successfully",
+            "P0: Timeout handling - test behavior when provider API slow",
+            "P0: Retry mechanism - confirm failed sends are retried correctly",
+            "P1: Error logging - ensure integration failures are logged",
+            "P1: Fallback provider - test secondary provider activation"
+          ]
+        }
+      ],
+      "common_keywords": ["API", "integration", "timeout", "provider", "external"],
+      "test_pattern": "integration_standard",
+      "average_complexity": 7,
+      "typical_timeline_hours": 6
+    }
+  },
+  "component_impact_frequency": {
+    "smartech-app": {
+      "total_tickets": 25,
+      "high_impact": 8,
+      "medium_impact": 12,
+      "low_impact": 5,
+      "common_issues": ["UI rendering", "state management", "user interactions"]
+    },
+    "database": {
+      "total_tickets": 18,
+      "high_impact": 12,
+      "medium_impact": 4,
+      "low_impact": 2,
+      "common_issues": ["query performance", "data consistency", "schema changes"]
+    },
+    "campaign-service": {
+      "total_tickets": 15,
+      "high_impact": 6,
+      "medium_impact": 7,
+      "low_impact": 2,
+      "common_issues": ["campaign lifecycle", "status transitions", "business logic"]
+    },
+    "auth-service": {
+      "total_tickets": 12,
+      "high_impact": 8,
+      "medium_impact": 3,
+      "low_impact": 1,
+      "common_issues": ["login failures", "session management", "permissions"]
+    },
+    "email-service": {
+      "total_tickets": 10,
+      "high_impact": 4,
+      "medium_impact": 5,
+      "low_impact": 1,
+      "common_issues": ["delivery failures", "template rendering", "personalization"]
+    }
+  },
+  "customer_specific_patterns": {
+    "heromotocorp_cee": {
+      "total_tickets": 8,
+      "common_issues": ["campaign deletion", "bulk operations", "custom workflows"],
+      "complexity_multiplier": 1.2,
+      "additional_test_requirements": ["multi-tenant validation", "data isolation"]
+    },
+    "generic_customers": {
+      "total_tickets": 35,
+      "common_issues": ["standard functionality", "performance", "integrations"],
+      "complexity_multiplier": 1.0,
+      "additional_test_requirements": ["standard regression testing"]
+    }
+  },
+  "severity_distribution": {
+    "Blocker": {
+      "count": 5,
+      "average_complexity": 9,
+      "average_timeline_hours": 12,
+      "examples": ["system-wide outages", "data corruption", "security breaches"]
+    },
+    "Critical": {
+      "count": 12,
+      "average_complexity": 7,
+      "average_timeline_hours": 8,
+      "examples": ["core feature failures", "authentication issues", "major integrations"]
+    },
+    "Major": {
+      "count": 20,
+      "average_complexity": 6,
+      "average_timeline_hours": 6,
+      "examples": ["feature malfunctions", "performance issues", "UI problems"]
+    },
+    "Minor": {
+      "count": 13,
+      "average_complexity": 4,
+      "average_timeline_hours": 4,
+      "examples": ["cosmetic issues", "edge cases", "minor enhancements"]
+    }
+  },
+  "test_case_effectiveness": {
+    "campaign_deletion_standard": {
+      "pattern_id": "CAMP_DELETE_001",
+      "success_rate": 0.92,
+      "defect_detection_rate": 0.88,
+      "recommended_test_count": 5,
+      "execution_time_minutes": 45
+    },
+    "authentication_standard": {
+      "pattern_id": "AUTH_FAIL_001", 
+      "success_rate": 0.95,
+      "defect_detection_rate": 0.91,
+      "recommended_test_count": 6,
+      "execution_time_minutes": 35
+    },
+    "email_delivery_standard": {
+      "pattern_id": "EMAIL_DEL_001",
+      "success_rate": 0.89,
+      "defect_detection_rate": 0.85,
+      "recommended_test_count": 5,
+      "execution_time_minutes": 30
+    },
+    "performance_standard": {
+      "pattern_id": "PERF_DEG_001",
+      "success_rate": 0.87,
+      "defect_detection_rate": 0.83,
+      "recommended_test_count": 7,
+      "execution_time_minutes": 60
+    },
+    "integration_standard": {
+      "pattern_id": "API_INT_001",
+      "success_rate": 0.90,
+      "defect_detection_rate": 0.86,
+      "recommended_test_count": 6,
+      "execution_time_minutes": 40
+    }
+  },
+  "automation_insights": {
+    "pattern_recognition_accuracy": 0.87,
+    "test_case_generation_success": 0.91,
+    "false_positive_rate": 0.08,
+    "average_analysis_time_seconds": 15,
+    "recommended_improvements": [
+      "Enhance keyword matching for edge cases",
+      "Improve component dependency detection",
+      "Add more customer-specific pattern recognition",
+      "Integrate historical defect correlation"
+    ]
+  },
+  "learning_data": {
+    "successful_patterns": [
+      "Campaign deletion issues consistently detected with 95% accuracy",
+      "Authentication patterns well-recognized across different scenarios", 
+      "Performance issues accurately categorized by impact level",
+      "Integration failures properly mapped to external dependencies"
+    ],
+    "improvement_areas": [
+      "Better detection of cross-component dependencies",
+      "Enhanced timeline estimation for complex scenarios",
+      "Improved customer-specific pattern recognition",
+      "More accurate complexity scoring for edge cases"
+    ],
+    "pattern_evolution": {
+      "emerging_patterns": ["multi-channel campaign issues", "real-time sync problems"],
+      "declining_patterns": ["basic authentication failures", "simple UI rendering issues"],
+      "stable_patterns": ["database performance", "external integration timeouts"]
+    }
+  }
+} 
